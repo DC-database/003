@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IBA System Portal</title>
+  <style>
+    @font-face {
+      font-family: 'Bookman Old Style';
+      src: local('Bookman Old Style'), local('BookmanOldStyle');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f9fc;
+      color: #004987;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    /* Spectacular intro animation */
+    .intro-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #004987 0%, #002b57 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1000;
+      animation: fadeOut 1s ease-in-out 3.5s forwards;
+    }
+
+    .intro-logo {
+      font-family: 'Bookman Old Style', serif;
+      font-size: 5rem;
+      color: white;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: 
+        logoFadeIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.5s forwards,
+        logoGlow 2s ease-in-out 2s infinite alternate;
+    }
+
+    .intro-subtitle {
+      color: white;
+      font-size: 1.2rem;
+      opacity: 0;
+      margin-top: 20px;
+      transform: translateY(20px);
+      animation: subtitleFadeIn 1s ease-out 1.5s forwards;
+    }
+
+    .particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      animation: float linear infinite;
+    }
+
+    @keyframes logoFadeIn {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes logoGlow {
+      0% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.7); }
+      100% { text-shadow: 0 0 30px rgba(255, 255, 255, 0.9), 0 0 10px white; }
+    }
+
+    @keyframes subtitleFadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeOut {
+      0% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
+    }
+
+    /* Main content */
+    .main-content {
+      opacity: 0;
+      animation: contentFadeIn 0.5s ease-out 4s forwards;
+    }
+
+    @keyframes contentFadeIn {
+      0% { opacity: 0; transform: translateY(10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    header {
+      background-color: white;
+      padding: 20px 8px;
+      box-shadow: 0 2px 10px rgba(0, 73, 135, 0.1);
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 80px;
+    }
+
+    .logo-img {
+      height: auto;
+      max-height: 100px;
+      max-width: 90vw;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-img:hover {
+      transform: scale(1.05);
+    }
+
+    .logo-text {
+      font-size: 24px;
+      font-weight: bold;
+      color: #004987;
+      display: none;
+    }
+
+    .container {
+      max-width: 350px;
+      margin: 30px auto;
+      padding: 0 15px;
+    }
+
+    .system-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 15px rgba(0, 73, 135, 0.1);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0, 73, 135, 0.1);
+    }
+
+    .system-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 73, 135, 0.15);
+    }
+
+    .system-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #004987;
+      position: relative;
+      padding-bottom: 8px;
+    }
+
+    .system-title:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      height: 2px;
+      background: #004987;
+    }
+
+    .btn {
+      display: inline-block;
+      width: 85%;
+      height: 50px;
+      line-height: 50px;
+      margin: 10px auto;
+      text-align: center;
+      border-radius: 30px;
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      color: white;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 73, 135, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0, 73, 135, 0.3);
+    }
+
+    .btn:hover:after {
+      transform: translateX(100%);
+    }
+
+    .btn-local {
+      background: linear-gradient(135deg, #004987, #0066cc);
+    }
+
+    .btn-cloud {
+      background: linear-gradient(135deg, #004987, #0088ff);
+    }
+
+    .btn-vehicle {
+      background: linear-gradient(135deg, #004987, #0055aa);
+    }
+
+    footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #666;
+      padding: 15px;
+      background-color: white;
+      border-top: 1px solid rgba(0, 73, 135, 0.1);
+    }
+
+    /* Sound control button */
+    .sound-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #004987;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Desktop: Show Network (local) only */
+    .btn-cloud {
+      display: none;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 1024px) {
+      /* Tablet and Mobile: Show Cloud only */
+      .btn-local {
+        display: none !important;
+      }
+      
+      .btn-cloud {
+        display: inline-block !important;
+      }
+
+      .intro-logo {
+        font-size: 3.5rem;
+      }
+
+      .logo-img {
+        max-height: 80px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .intro-logo {
+        font-size: 3rem;
+      }
+
+      .intro-subtitle {
+        font-size: 1rem;
+      }
+
+      .logo-img {
+        display: none;
+      }
+      
+      .logo-text {
+        display: block;
+      }
+
+      .system-card {
+        padding: 15px;
+      }
+
+      .btn {
+        width: 90%;
+        height: 55px;
+        line-height: 55px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .intro-logo {
+        font-size: 2.5rem;
+      }
+
+      .container {
+        max-width: 320px;
+      }
+
+      .system-title {
+        font-size: 16px;
+      }
+
+      .btn {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Spectacular intro animation -->
+  <div class="intro-animation">
+    <div class="particles" id="particles"></div>
+    <div class="intro-logo">IBA</div>
+    <div class="intro-subtitle">Trading & Contracting & Transportation</div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <header>
+      <div class="logo-container">
+        <img src="https://raw.githubusercontent.com/DC-database/Invoice/main/logo.png" alt="IBA Logo" class="logo-img" onerror="this.style.display='none'; document.querySelector('.logo-text').style.display='block';">
+        <div class="logo-text">Welcome to IBA System Portal</div>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="system-card">
+        <div class="system-title">Invoice Management</div>
+        <a href="file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html" class="btn btn-local" target="_blank">Network</a>
+        <a href="https://dc-database.github.io/001/index.html" class="btn btn-cloud" target="_blank">Cloud</a>
+      </div>
+
+      <div class="system-card">
+        <div class="system-title">Vehicle Reports</div>
+        <a href="https://dc-database.github.io/002/index.html" class="btn btn-vehicle" target="_blank">Open Records</a>
+      </div>
+    </div>
+
+    <footer>
+      &copy; 2025 IBA Trading and Contracting W.L.L. All rights reserved.
+    </footer>
+  </div>
+
+  <!-- Sound control button -->
+  <button class="sound-control" id="soundControl">🔊</button>
+
+  <script>
+    // Sound management
+    const soundControl = document.getElementById('soundControl');
+    let soundsEnabled = true;
+    const soundSources = {
+      intro: [
+        'https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3',
+        'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
+        'https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3'
+      ],
+      click: [
+        'https://assets.mixkit.co/sfx/preview/mixkit-modern-click-box-check-1120.mp3',
+        'https://assets.mixkit.co/sfx/preview/mixkit-quick-jump-arcade-game-239.mp3',
+        'https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3'
+      ]
+    };
+
+    // Create floating particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = window.innerWidth < 768 ? 20 : 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random properties
+        const size = Math.random() * 10 + 5;
+        const posX = Math.random() * 100;
+        const duration = Math.random() * 20 + 10;
+        const delay = Math.random() * 5;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}%`;
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.animationDelay = `${delay}s`;
+        
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Play sound with fallback
+    function playSound(type) {
+      if (!soundsEnabled) return;
+      
+      const sources = soundSources[type];
+      if (!sources || sources.length === 0) return;
+      
+      // Try each source until one works
+      let currentTry = 0;
+      
+      function tryPlay() {
+        if (currentTry >= sources.length) return;
+        
+        const audio = new Audio(sources[currentTry]);
+        audio.volume = type === 'intro' ? 0.4 : 0.2;
+        
+        audio.play().catch(e => {
+          console.log(`Sound ${currentTry} failed, trying next`);
+          currentTry++;
+          tryPlay();
+        });
+      }
+      
+      tryPlay();
+    }
+
+    // Initialize sound control
+    soundControl.addEventListener('click', () => {
+      soundsEnabled = !soundsEnabled;
+      soundControl.textContent = soundsEnabled ? '🔊' : '🔇';
+      localStorage.setItem('ibaPortalSoundsEnabled', soundsEnabled ? 'true' : 'false');
+    });
+
+    // Load sound preference
+    document.addEventListener('DOMContentLoaded', function() {
+      createParticles();
+      
+      // Load sound preference
+      const savedSoundPref = localStorage.getItem('ibaPortalSoundsEnabled');
+      if (savedSoundPref === 'false') {
+        soundsEnabled = false;
+        soundControl.textContent = '🔇';
+      }
+      
+      // Play intro sound with 500ms delay to ensure DOM is ready
+      setTimeout(() => {
+        playSound('intro');
+      }, 500);
+
+      // Fallback for logo image
+      window.addEventListener('load', function() {
+        const img = document.querySelector('.logo-img');
+        if (img && img.naturalWidth === 0) {
+          img.style.display = 'none';
+          document.querySelector('.logo-text').style.display = 'block';
+        }
+      });
+    });
+
+    // Add click sound to buttons
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        playSound('click');
+      });
+    });
+  </script>
+</body>
+</html>
