@@ -380,12 +380,9 @@
       intro: [
         'https://assets.freesound.org/previews/600/600873_11861866-lq.mp3', // Bell sound
         'https://assets.freesound.org/previews/612/612095_11861866-lq.mp3', // Chime sound
-        'https://assets.freesound.org/previews/600/600873_11861866-lq.mp3'  // Fallback to bell
       ],
       click: [
-        'https://assets.freesound.org/previews/609/609288_11861866-lq.mp3', // Click sound 1
-        'https://assets.freesound.org/previews/609/609288_11861866-lq.mp3', // Click sound 2
-        'https://assets.freesound.org/previews/609/609288_11861866-lq.mp3'  // Fallback click
+        'https://assets.freesound.org/previews/609/609288_11861866-lq.mp3', // Click sound
       ]
     };
 
@@ -421,23 +418,9 @@
       const sources = soundSources[type];
       if (!sources || sources.length === 0) return;
       
-      // Try each source until one works
-      let currentTry = 0;
-      
-      function tryPlay() {
-        if (currentTry >= sources.length) return;
-        
-        const audio = new Audio(sources[currentTry]);
-        audio.volume = type === 'intro' ? 0.4 : 0.2;
-        
-        audio.play().catch(e => {
-          console.log(`Sound ${currentTry} failed, trying next`);
-          currentTry++;
-          tryPlay();
-        });
-      }
-      
-      tryPlay();
+      const sound = new Audio(sources[0]);
+      sound.volume = type === 'intro' ? 0.4 : 0.2;
+      sound.play().catch(e => console.log("Sound blocked by browser"));
     }
 
     // Initialize sound control
@@ -448,28 +431,38 @@
       playSound('click');
     });
 
-    // Detect local network and set up the local invoice button
+    // Handle local invoice button
     function setupLocalInvoiceButton() {
       const localBtn = document.getElementById('localInvoiceBtn');
       
-      // Check if we're running locally (file protocol) or on GitHub (https)
-      if (window.location.protocol === 'file:' || window.location.hostname === 'localhost') {
-        // Local environment - use the file path
-        localBtn.href = 'file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html';
+      // Check if we're on a Windows machine (likely local network)
+      const isWindows = navigator.userAgent.includes('Windows');
+      
+      if (isWindows) {
+        // Try to open via direct file link (works if browser allows it)
+        localBtn.href = "file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html";
+        
         localBtn.addEventListener('click', function(e) {
           playSound('click');
+          
+          // Fallback: If direct link fails, show instructions
+          setTimeout(() => {
+            if (!document.hidden) {
+              alert('If the invoice system did not open:\n\n1. Copy this path:\nfile:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html\n\n2. Paste it directly into your browser address bar.');
+            }
+          }, 1000);
         });
       } else {
-        // GitHub environment - show instructions
+        // Non-Windows device (mobile/tablet) - show instructions
         localBtn.addEventListener('click', function(e) {
           e.preventDefault();
           playSound('click');
-          alert('To access the Network version:\n\n1. Open this page on your company computer\n2. Make sure you are connected to the company network\n\nIf you are on the company network and still see this message, please contact IT support.');
+          alert('Network Access Instructions:\n\n1. Open this page on your company Windows computer\n2. Make sure you are connected to the company network\n3. Access via: file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html');
         });
       }
     }
 
-    // Load sound preference and initialize
+    // Initialize everything
     document.addEventListener('DOMContentLoaded', function() {
       createParticles();
       setupLocalInvoiceButton();
@@ -481,28 +474,13 @@
         soundControl.textContent = '🔇';
       }
       
-      // Play intro sound with 500ms delay to ensure DOM is ready
-      setTimeout(() => {
-        playSound('intro');
-      }, 500);
-
-      // Fallback for logo image
-      window.addEventListener('load', function() {
-        const img = document.querySelector('.logo-img');
-        if (img && img.naturalWidth === 0) {
-          img.style.display = 'none';
-          document.querySelector('.logo-text').style.display = 'block';
-        }
-      });
+      // Play intro sound
+      setTimeout(() => playSound('intro'), 500);
     });
 
-    // Add click sound to buttons
+    // Add click sound to all buttons
     document.querySelectorAll('.btn').forEach(btn => {
-      if (btn.id !== 'localInvoiceBtn') { // Skip local invoice btn as we already set it up
-        btn.addEventListener('click', function() {
-          playSound('click');
-        });
-      }
+      btn.addEventListener('click', () => playSound('click'));
     });
   </script>
 </body>
