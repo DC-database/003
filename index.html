@@ -1,44 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Open Invoice Batch File</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
+    <title>Paste 123.html into Browser</title>
+    <script>
+        function simulatePaste() {
+            const text = "123.html";
+            
+            // Copy to clipboard first
+            navigator.clipboard.writeText(text).then(() => {
+                // Create a hidden input and focus it
+                const input = document.createElement('input');
+                input.style.position = 'fixed';
+                input.style.opacity = 0;
+                input.value = text;
+                document.body.appendChild(input);
+                input.select();
+                
+                try {
+                    // Simulate Ctrl+V (paste)
+                    document.execCommand('paste');
+                    
+                    // Simulate pressing Enter (works in most browsers)
+                    setTimeout(() => {
+                        const ke = new KeyboardEvent('keydown', {
+                            key: 'Enter',
+                            code: 'Enter',
+                            keyCode: 13,
+                            which: 13,
+                            bubbles: true
+                        });
+                        input.dispatchEvent(ke);
+                    }, 50);
+                    
+                } catch (e) {
+                    alert("Auto-paste failed. Press Ctrl+V in your address bar.");
+                }
+                
+                document.body.removeChild(input);
+            });
         }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+        
+        window.onload = simulatePaste;
+    </script>
 </head>
 <body>
-    <h1>Invoice Management System</h1>
-    <button id="openBtn">Open Invoice Batch File</button>
-
-    <script>
-        document.getElementById('openBtn').addEventListener('click', function() {
-            // Create a link to the file
-            const filePath = 'L:\\HTML System\\Invoice Management System\\OpenInvoice.bat';
-            
-            // This only works with file:// protocol (local HTML file)
-            try {
-                window.open('file:///' + filePath);
-            } catch (e) {
-                alert('Could not open the file. Please make sure the path is correct and you have permissions.');
-                console.error(e);
-            }
-        });
-    </script>
+    <h1>Redirecting to 123.html...</h1>
+    <p>If nothing happens, press <kbd>Ctrl</kbd>+<kbd>V</kbd> in your address bar.</p>
 </body>
 </html>
