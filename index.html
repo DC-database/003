@@ -1,50 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Paste 123.html into Browser</title>
+    <title>Go to 123.html</title>
     <script>
-        function simulatePaste() {
-            const text = "123.html";
-            
-            // Copy to clipboard first
-            navigator.clipboard.writeText(text).then(() => {
-                // Create a hidden input and focus it
-                const input = document.createElement('input');
-                input.style.position = 'fixed';
-                input.style.opacity = 0;
-                input.value = text;
-                document.body.appendChild(input);
-                input.select();
-                
-                try {
-                    // Simulate Ctrl+V (paste)
-                    document.execCommand('paste');
-                    
-                    // Simulate pressing Enter (works in most browsers)
-                    setTimeout(() => {
-                        const ke = new KeyboardEvent('keydown', {
-                            key: 'Enter',
-                            code: 'Enter',
-                            keyCode: 13,
-                            which: 13,
-                            bubbles: true
-                        });
-                        input.dispatchEvent(ke);
-                    }, 50);
-                    
-                } catch (e) {
-                    alert("Auto-paste failed. Press Ctrl+V in your address bar.");
-                }
-                
-                document.body.removeChild(input);
-            });
-        }
-        
-        window.onload = simulatePaste;
+        // Try to redirect automatically
+        window.onload = function() {
+            // Check if 123.html exists (only works if on same domain)
+            fetch("123.html", { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = "123.html"; // Redirect if file exists
+                    }
+                })
+                .catch(() => {
+                    // If fetch fails (CORS, file missing), do nothing
+                });
+        };
     </script>
 </head>
 <body>
-    <h1>Redirecting to 123.html...</h1>
-    <p>If nothing happens, press <kbd>Ctrl</kbd>+<kbd>V</kbd> in your address bar.</p>
+    <h1>123.html</h1>
+    <p>
+        <a href="123.html" id="manualLink">Click here to open 123.html</a>
+    </p>
+    <script>
+        // Make the link visible if auto-redirect fails
+        setTimeout(() => {
+            document.getElementById("manualLink").style.display = "inline";
+        }, 1000);
+    </script>
 </body>
 </html>
