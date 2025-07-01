@@ -1,4 +1,3 @@
-
 const soundControl = document.getElementById('soundControl');
 let soundsEnabled = true;
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -23,23 +22,6 @@ function playSound(type) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('localInvoiceBtn').onclick = async function(e) {
-    e.preventDefault();
-    playSound('click');
-    const path = 'file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html';
-    try {
-      const opened = window.open(path, '_blank');
-      if (!opened) throw new Error('Blocked');
-    } catch (err) {
-      try {
-        await navigator.clipboard.writeText(path);
-        alert("Network path copied to clipboard. Please paste in browser or File Explorer.");
-      } catch {
-        prompt("Please copy this path manually:", path);
-      }
-    }
-  };
-
   soundControl.onclick = () => {
     soundsEnabled = !soundsEnabled;
     soundControl.textContent = soundsEnabled ? '🔊' : '🔇';
