@@ -367,6 +367,10 @@
     // Sound management
     const soundControl = document.getElementById('soundControl');
     let soundsEnabled = true;
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let currentSound = null;
+
+    // Sound sources with fallbacks
     const soundSources = {
       intro: [
         'https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3',
@@ -406,44 +410,60 @@
     function playSound(type) {
       if (!soundsEnabled) return;
       
-      const audio = new Audio();
-      audio.src = soundSources[type][0];
-      audio.volume = type === 'intro' ? 0.3 : 0.2;
-      audio.play().catch(e => {
-        audio.src = soundSources[type][1];
-        audio.play().catch(() => {});
-      });
+      // Stop any currently playing sound
+      if (currentSound) {
+        currentSound.stop();
+      }
+      
+      try {
+        const soundIndex = Math.floor(Math.random() * soundSources[type].length);
+        const soundUrl = soundSources[type][soundIndex];
+        
+        fetch(soundUrl)
+          .then(response => response.arrayBuffer())
+          .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+          .then(audioBuffer => {
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            source.connect(audioContext.destination);
+            source.start(0);
+            currentSound = source;
+          })
+          .catch(error => {
+            console.error('Error playing sound:', error);
+          });
+      } catch (e) {
+        console.error('Sound error:', e);
+      }
     }
 
     // Local network detection
     function setupLocalInvoiceButton() {
       const localBtn = document.getElementById('localInvoiceBtn');
-      const isLocal = window.location.protocol === 'file:' || 
-                     navigator.userAgent.includes('Windows') && 
-                     !window.location.href.includes('github.io');
-
-      if (isLocal) {
-        localBtn.onclick = function(e) {
-          e.preventDefault();
-          playSound('click');
+      const path = 'file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html';
+      
+      localBtn.onclick = async function(e) {
+        e.preventDefault();
+        playSound('click');
+        
+        try {
+          // Copy the path to clipboard
+          await navigator.clipboard.writeText(path);
           
-          // Try direct open
-          window.open('file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html', '_blank');
+          // Show a more helpful message
+          alert('Network path copied to clipboard!\n\nPaste this in File Explorer or browser address bar:\n' + path);
           
-          // Fallback after 1 second
-          setTimeout(() => {
-            if (!document.hidden) {
-              alert('If invoice system didn\'t open:\n\n1. Open File Explorer\n2. Paste this path:\nL:\\HTML System\\Invoice Management System\\Invoice.html');
-            }
-          }, 1000);
-        };
-      } else {
-        localBtn.onclick = function(e) {
-          e.preventDefault();
-          playSound('click');
-          alert('For local access:\n\n1. Open on company computer\n2. Paste in address bar:\nfile:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html');
-        };
-      }
+          // Try to open it directly (will only work if the page is served via file:// protocol)
+          try {
+            window.open(path, '_blank');
+          } catch (e) {
+            console.log('Direct open blocked by browser');
+          }
+        } catch (err) {
+          // Fallback if clipboard fails
+          prompt('Copy this path manually:', path);
+        }
+      };
     }
 
     // Initialize
@@ -455,8 +475,18 @@
       soundsEnabled = localStorage.getItem('ibaPortalSoundsEnabled') !== 'false';
       soundControl.textContent = soundsEnabled ? '🔊' : '🔇';
       
-      // Play intro sound
-      setTimeout(() => playSound('intro'), 500);
+      // Play intro sound after a small delay
+      setTimeout(() => {
+        try {
+          // Resume audio context if it was suspended
+          if (audioContext.state === 'suspended') {
+            audioContext.resume();
+          }
+          playSound('intro');
+        } catch (e) {
+          console.error('Error playing intro sound:', e);
+        }
+      }, 500);
     });
 
     // Sound control
