@@ -1,33 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Go to 123.html</title>
-    <script>
-        // Try to redirect automatically
-        window.onload = function() {
-            // Check if 123.html exists (only works if on same domain)
-            fetch("123.html", { method: 'HEAD' })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.href = "123.html"; // Redirect if file exists
-                    }
-                })
-                .catch(() => {
-                    // If fetch fails (CORS, file missing), do nothing
-                });
-        };
-    </script>
+  <meta charset="UTF-8">
+  <title>Open Local Path</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <h1>123.html</h1>
-    <p>
-        <a href="123.html" id="manualLink">Click here to open 123.html</a>
-    </p>
-    <script>
-        // Make the link visible if auto-redirect fails
-        setTimeout(() => {
-            document.getElementById("manualLink").style.display = "inline";
-        }, 1000);
-    </script>
+  <h2>Click to open local folder</h2>
+  <button onclick="openLocal()">Open Folder</button>
+
+  <script>
+    function openLocal() {
+      const localPath = "file:///L:/HTML%20System/Invoice%20Management%20System/123";
+      window.location.href = localPath;
+    }
+  </script>
 </body>
 </html>
