@@ -38,18 +38,19 @@
     }
 
     .intro-logo {
-      font-family: 'Bookman Old Style', serif;
-      font-size: 5rem;
-      color: white;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
-      opacity: 0;
-      transform: translateY(30px);
-      animation: 
-        logoFadeIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 3.5s forwards,
-        logoGlow 2s ease-in-out 5.5s infinite alternate;
-      position: relative;
-      z-index: 10;
-    }
+    font-family: 'Bookman Old Style', serif;
+    font-weight: bold; /* Add this line to make it bold */
+    font-size: 5rem;
+    color: white;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+    opacity: 0;
+    transform: translateY(30px);
+    animation: 
+      logoFadeIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 3.5s forwards,
+      logoGlow 2s ease-in-out 5.5s infinite alternate;
+    position: relative;
+    z-index: 10;
+  }
 
     .intro-subtitle {
       color: white;
@@ -313,23 +314,6 @@
       display: none;
     }
 
-    .download-progress {
-      display: none;
-      width: 80%;
-      margin: 10px auto;
-      height: 5px;
-      background: #e0e0e0;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #004987, #0088ff);
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-
     @media (max-width: 1024px) {
       .btn-local {
         display: none !important;
@@ -421,20 +405,6 @@
       <div class="system-card">
         <div class="system-title">Vehicle Reports</div>
         <a href="https://dc-database.github.io/002/index.html" class="btn btn-vehicle" target="_blank">Open Records</a>
-      </div>
-
-      <div class="system-card">
-        <div class="system-title">Network Access Help</div>
-        <div style="text-align: left; padding: 0 10px; font-size: 14px;">
-          <p><strong>How to use Network systems:</strong></p>
-          <ol>
-            <li>Click the "Network" button to download the system</li>
-            <li>Save the file to your preferred location (L: drive recommended)</li>
-            <li>Open the file from its saved location</li>
-            <li>For future use, access the file from where you saved it</li>
-          </ol>
-          <p>Contact IT support if you need assistance.</p>
-        </div>
       </div>
     </div>
 
@@ -642,75 +612,47 @@
       }
     }
 
-    // Local network file downloader
+    // Local network file opener
     function setupLocalInvoiceButton() {
       const localBtn = document.getElementById('localInvoiceBtn');
-      const downloadUrl = 'https://raw.githubusercontent.com/DC-database/Invoice/main/Invoice.html';
-      const fileName = 'Invoice_Management_System.html';
-      
-      // Create progress elements
-      const progressContainer = document.createElement('div');
-      progressContainer.className = 'download-progress';
-      const progressBar = document.createElement('div');
-      progressBar.className = 'progress-bar';
-      progressContainer.appendChild(progressBar);
-      localBtn.parentNode.insertBefore(progressContainer, localBtn.nextSibling);
+      const path = 'file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html';
       
       localBtn.onclick = async function(e) {
         e.preventDefault();
         playSound('click');
         
         try {
-          // Show progress
-          progressContainer.style.display = 'block';
-          progressBar.style.width = '0%';
+          // First try to open directly
+          const opened = window.open(path, '_blank');
           
-          const response = await fetch(downloadUrl);
-          if (!response.ok) throw new Error('Network response was not ok');
-          
-          const contentLength = response.headers.get('content-length');
-          let loaded = 0;
-          
-          const reader = response.body.getReader();
-          const chunks = [];
-          
-          while(true) {
-            const {done, value} = await reader.read();
-            if (done) break;
-            
-            chunks.push(value);
-            loaded += value.length;
-            
-            // Update progress if we know the total size
-            if (contentLength) {
-              progressBar.style.width = `${(loaded / contentLength) * 100}%`;
-            }
+          // Check if opening was blocked or failed
+          if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+            throw new Error('Direct open blocked');
           }
           
-          // Combine chunks and create blob
-          const blob = new Blob(chunks);
-          const blobUrl = window.URL.createObjectURL(blob);
+          // If we get here, the window opened successfully
+          return;
+        } catch (directError) {
+          console.log('Direct open failed, trying clipboard method');
           
-          // Trigger download
-          const a = document.createElement('a');
-          a.style.display = 'none';
-          a.href = blobUrl;
-          a.download = fileName;
-          document.body.appendChild(a);
-          a.click();
-          
-          // Clean up
-          window.URL.revokeObjectURL(blobUrl);
-          document.body.removeChild(a);
-          progressContainer.style.display = 'none';
-          
-          // Show success message
-          alert('Download complete! The file has been saved to your downloads folder.\n\n' +
-                'Please move it to your preferred network location and open it from there.');
-        } catch (error) {
-          console.error('Download failed:', error);
-          progressContainer.style.display = 'none';
-          alert('Failed to download the file. Please try again later or contact support.');
+          try {
+            // Fallback to clipboard method
+            await navigator.clipboard.writeText(path);
+            
+            // Show instructions with the path clearly visible
+            const shouldOpen = confirm(
+              'Network path copied to clipboard!\n\n' +
+              `Path: ${path}\n\n` +
+              'Press OK to try opening again, or Cancel to keep the path in clipboard.'
+            );
+            
+            if (shouldOpen) {
+              window.open(path, '_blank');
+            }
+          } catch (clipboardError) {
+            // Final fallback if clipboard fails
+            prompt('Could not open automatically. Please copy this path and paste in File Explorer:', path);
+          }
         }
       };
     }
