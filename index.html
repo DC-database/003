@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Open Local Path</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Click to open local folder</h2>
+  <button onclick="openLocal()">Open Folder</button>
+
+  <script>
+    function openLocal() {
+      const localPath = "file:///L:/HTML%20System/Invoice%20Management%20System/123";
+      window.location.href = localPath;
+    }
+  </script>
+</body>
+</html>
