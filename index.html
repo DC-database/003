@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Open Invoice Batch File</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Invoice Management System</h1>
+    <button id="openBtn">Open Invoice Batch File</button>
+
+    <script>
+        document.getElementById('openBtn').addEventListener('click', function() {
+            // Create a link to the file
+            const filePath = 'L:\\HTML System\\Invoice Management System\\OpenInvoice.bat';
+            
+            // This only works with file:// protocol (local HTML file)
+            try {
+                window.open('file:///' + filePath);
+            } catch (e) {
+                alert('Could not open the file. Please make sure the path is correct and you have permissions.');
+                console.error(e);
+            }
+        });
+    </script>
+</body>
+</html>
