@@ -354,7 +354,7 @@
     <div class="container">
       <div class="system-card">
         <div class="system-title">Invoice Management</div>
-        <a href="file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html" class="btn btn-local" target="_blank">Network</a>
+        <a href="#" id="localInvoiceBtn" class="btn btn-local" target="_blank">Network</a>
         <a href="https://dc-database.github.io/001/index.html" class="btn btn-cloud" target="_blank">Cloud</a>
       </div>
 
@@ -378,14 +378,14 @@
     let soundsEnabled = true;
     const soundSources = {
       intro: [
-        'https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3',
-        'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3',
-        'https://assets.mixkit.co/sfx/preview/mixkit-positive-interface-beep-221.mp3'
+        'https://assets.freesound.org/previews/600/600873_11861866-lq.mp3', // Bell sound
+        'https://assets.freesound.org/previews/612/612095_11861866-lq.mp3', // Chime sound
+        'https://assets.freesound.org/previews/600/600873_11861866-lq.mp3'  // Fallback to bell
       ],
       click: [
-        'https://assets.mixkit.co/sfx/preview/mixkit-modern-click-box-check-1120.mp3',
-        'https://assets.mixkit.co/sfx/preview/mixkit-quick-jump-arcade-game-239.mp3',
-        'https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3'
+        'https://assets.freesound.org/previews/609/609288_11861866-lq.mp3', // Click sound 1
+        'https://assets.freesound.org/previews/609/609288_11861866-lq.mp3', // Click sound 2
+        'https://assets.freesound.org/previews/609/609288_11861866-lq.mp3'  // Fallback click
       ]
     };
 
@@ -445,11 +445,34 @@
       soundsEnabled = !soundsEnabled;
       soundControl.textContent = soundsEnabled ? '🔊' : '🔇';
       localStorage.setItem('ibaPortalSoundsEnabled', soundsEnabled ? 'true' : 'false');
+      playSound('click');
     });
 
-    // Load sound preference
+    // Detect local network and set up the local invoice button
+    function setupLocalInvoiceButton() {
+      const localBtn = document.getElementById('localInvoiceBtn');
+      
+      // Check if we're running locally (file protocol) or on GitHub (https)
+      if (window.location.protocol === 'file:' || window.location.hostname === 'localhost') {
+        // Local environment - use the file path
+        localBtn.href = 'file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html';
+        localBtn.addEventListener('click', function(e) {
+          playSound('click');
+        });
+      } else {
+        // GitHub environment - show instructions
+        localBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          playSound('click');
+          alert('To access the Network version:\n\n1. Open this page on your company computer\n2. Make sure you are connected to the company network\n\nIf you are on the company network and still see this message, please contact IT support.');
+        });
+      }
+    }
+
+    // Load sound preference and initialize
     document.addEventListener('DOMContentLoaded', function() {
       createParticles();
+      setupLocalInvoiceButton();
       
       // Load sound preference
       const savedSoundPref = localStorage.getItem('ibaPortalSoundsEnabled');
@@ -475,9 +498,11 @@
 
     // Add click sound to buttons
     document.querySelectorAll('.btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        playSound('click');
-      });
+      if (btn.id !== 'localInvoiceBtn') { // Skip local invoice btn as we already set it up
+        btn.addEventListener('click', function() {
+          playSound('click');
+        });
+      }
     });
   </script>
 </body>
