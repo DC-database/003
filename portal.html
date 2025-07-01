@@ -437,7 +437,7 @@
       }
     }
 
-    // Local network detection
+    // Local network file opener
     function setupLocalInvoiceButton() {
       const localBtn = document.getElementById('localInvoiceBtn');
       const path = 'file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html';
@@ -447,21 +447,37 @@
         playSound('click');
         
         try {
-          // Copy the path to clipboard
-          await navigator.clipboard.writeText(path);
+          // First try to open directly
+          const opened = window.open(path, '_blank');
           
-          // Show a more helpful message
-          alert('Network path copied to clipboard!\n\nPaste this in File Explorer or browser address bar:\n' + path);
-          
-          // Try to open it directly (will only work if the page is served via file:// protocol)
-          try {
-            window.open(path, '_blank');
-          } catch (e) {
-            console.log('Direct open blocked by browser');
+          // Check if opening was blocked or failed
+          if (!opened || opened.closed || typeof opened.closed === 'undefined') {
+            throw new Error('Direct open blocked');
           }
-        } catch (err) {
-          // Fallback if clipboard fails
-          prompt('Copy this path manually:', path);
+          
+          // If we get here, the window opened successfully
+          return;
+        } catch (directError) {
+          console.log('Direct open failed, trying clipboard method');
+          
+          try {
+            // Fallback to clipboard method
+            await navigator.clipboard.writeText(path);
+            
+            // Show instructions with the path clearly visible
+            const shouldOpen = confirm(
+              'Network path copied to clipboard!\n\n' +
+              `Path: ${path}\n\n` +
+              'Press OK to try opening again, or Cancel to keep the path in clipboard.'
+            );
+            
+            if (shouldOpen) {
+              window.open(path, '_blank');
+            }
+          } catch (clipboardError) {
+            // Final fallback if clipboard fails
+            prompt('Could not open automatically. Please copy this path and paste in File Explorer:', path);
+          }
         }
       };
     }
