@@ -22,7 +22,6 @@
       overflow-x: hidden;
     }
 
-    /* Spectacular intro animation */
     .intro-animation {
       position: fixed;
       top: 0;
@@ -99,7 +98,6 @@
       100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; }
     }
 
-    /* Main content */
     .main-content {
       opacity: 0;
       animation: contentFadeIn 0.5s ease-out 4s forwards;
@@ -242,7 +240,6 @@
       border-top: 1px solid rgba(0, 73, 135, 0.1);
     }
 
-    /* Sound control button */
     .sound-control {
       position: fixed;
       bottom: 20px;
@@ -262,14 +259,11 @@
       align-items: center;
     }
 
-    /* Desktop: Show Network (local) only */
     .btn-cloud {
       display: none;
     }
 
-    /* Mobile adjustments */
     @media (max-width: 1024px) {
-      /* Tablet and Mobile: Show Cloud only */
       .btn-local {
         display: none !important;
       }
@@ -335,14 +329,12 @@
   </style>
 </head>
 <body>
-  <!-- Spectacular intro animation -->
   <div class="intro-animation">
     <div class="particles" id="particles"></div>
     <div class="intro-logo">IBA</div>
     <div class="intro-subtitle">Trading & Contracting & Transportation</div>
   </div>
 
-  <!-- Main content -->
   <div class="main-content">
     <header>
       <div class="logo-container">
@@ -369,7 +361,6 @@
     </footer>
   </div>
 
-  <!-- Sound control button -->
   <button class="sound-control" id="soundControl">🔊</button>
 
   <script>
@@ -378,11 +369,12 @@
     let soundsEnabled = true;
     const soundSources = {
       intro: [
-        'https://assets.freesound.org/previews/600/600873_11861866-lq.mp3', // Bell sound
-        'https://assets.freesound.org/previews/612/612095_11861866-lq.mp3', // Chime sound
+        'https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3',
+        'https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3'
       ],
       click: [
-        'https://assets.freesound.org/previews/609/609288_11861866-lq.mp3', // Click sound
+        'https://assets.mixkit.co/sfx/preview/mixkit-modern-click-box-check-1120.mp3',
+        'https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3'
       ]
     };
 
@@ -395,7 +387,6 @@
         const particle = document.createElement('div');
         particle.classList.add('particle');
         
-        // Random properties
         const size = Math.random() * 10 + 5;
         const posX = Math.random() * 100;
         const duration = Math.random() * 20 + 10;
@@ -415,70 +406,68 @@
     function playSound(type) {
       if (!soundsEnabled) return;
       
-      const sources = soundSources[type];
-      if (!sources || sources.length === 0) return;
-      
-      const sound = new Audio(sources[0]);
-      sound.volume = type === 'intro' ? 0.4 : 0.2;
-      sound.play().catch(e => console.log("Sound blocked by browser"));
+      const audio = new Audio();
+      audio.src = soundSources[type][0];
+      audio.volume = type === 'intro' ? 0.3 : 0.2;
+      audio.play().catch(e => {
+        audio.src = soundSources[type][1];
+        audio.play().catch(() => {});
+      });
     }
 
-    // Initialize sound control
-    soundControl.addEventListener('click', () => {
-      soundsEnabled = !soundsEnabled;
-      soundControl.textContent = soundsEnabled ? '🔊' : '🔇';
-      localStorage.setItem('ibaPortalSoundsEnabled', soundsEnabled ? 'true' : 'false');
-      playSound('click');
-    });
-
-    // Handle local invoice button
+    // Local network detection
     function setupLocalInvoiceButton() {
       const localBtn = document.getElementById('localInvoiceBtn');
-      
-      // Check if we're on a Windows machine (likely local network)
-      const isWindows = navigator.userAgent.includes('Windows');
-      
-      if (isWindows) {
-        // Try to open via direct file link (works if browser allows it)
-        localBtn.href = "file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html";
-        
-        localBtn.addEventListener('click', function(e) {
-          playSound('click');
-          
-          // Fallback: If direct link fails, show instructions
-          setTimeout(() => {
-            if (!document.hidden) {
-              alert('If the invoice system did not open:\n\n1. Copy this path:\nfile:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html\n\n2. Paste it directly into your browser address bar.');
-            }
-          }, 1000);
-        });
-      } else {
-        // Non-Windows device (mobile/tablet) - show instructions
-        localBtn.addEventListener('click', function(e) {
+      const isLocal = window.location.protocol === 'file:' || 
+                     navigator.userAgent.includes('Windows') && 
+                     !window.location.href.includes('github.io');
+
+      if (isLocal) {
+        localBtn.onclick = function(e) {
           e.preventDefault();
           playSound('click');
-          alert('Network Access Instructions:\n\n1. Open this page on your company Windows computer\n2. Make sure you are connected to the company network\n3. Access via: file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html');
-        });
+          
+          // Try direct open
+          window.open('file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html', '_blank');
+          
+          // Fallback after 1 second
+          setTimeout(() => {
+            if (!document.hidden) {
+              alert('If invoice system didn\'t open:\n\n1. Open File Explorer\n2. Paste this path:\nL:\\HTML System\\Invoice Management System\\Invoice.html');
+            }
+          }, 1000);
+        };
+      } else {
+        localBtn.onclick = function(e) {
+          e.preventDefault();
+          playSound('click');
+          alert('For local access:\n\n1. Open on company computer\n2. Paste in address bar:\nfile:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html');
+        };
       }
     }
 
-    // Initialize everything
+    // Initialize
     document.addEventListener('DOMContentLoaded', function() {
       createParticles();
       setupLocalInvoiceButton();
       
-      // Load sound preference
-      const savedSoundPref = localStorage.getItem('ibaPortalSoundsEnabled');
-      if (savedSoundPref === 'false') {
-        soundsEnabled = false;
-        soundControl.textContent = '🔇';
-      }
+      // Sound preference
+      soundsEnabled = localStorage.getItem('ibaPortalSoundsEnabled') !== 'false';
+      soundControl.textContent = soundsEnabled ? '🔊' : '🔇';
       
       // Play intro sound
       setTimeout(() => playSound('intro'), 500);
     });
 
-    // Add click sound to all buttons
+    // Sound control
+    soundControl.addEventListener('click', () => {
+      soundsEnabled = !soundsEnabled;
+      soundControl.textContent = soundsEnabled ? '🔊' : '🔇';
+      localStorage.setItem('ibaPortalSoundsEnabled', soundsEnabled);
+      playSound('click');
+    });
+
+    // Click sounds for buttons
     document.querySelectorAll('.btn').forEach(btn => {
       btn.addEventListener('click', () => playSound('click'));
     });
