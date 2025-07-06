@@ -38,19 +38,19 @@
     }
 
     .intro-logo {
-    font-family: 'Bookman Old Style', serif;
-    font-weight: bold; /* Add this line to make it bold */
-    font-size: 5rem;
-    color: white;
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
-    opacity: 0;
-    transform: translateY(30px);
-    animation: 
-      logoFadeIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 3.5s forwards,
-      logoGlow 2s ease-in-out 5.5s infinite alternate;
-    position: relative;
-    z-index: 10;
-  }
+      font-family: 'Bookman Old Style', serif;
+      font-weight: bold;
+      font-size: 5rem;
+      color: white;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+      opacity: 0;
+      transform: translateY(30px);
+      animation: 
+        logoFadeIn 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 3.5s forwards,
+        logoGlow 2s ease-in-out 5.5s infinite alternate;
+      position: relative;
+      z-index: 10;
+    }
 
     .intro-subtitle {
       color: white;
@@ -63,7 +63,7 @@
       z-index: 10;
     }
 
-    .construction-animation {
+    .engineering-animation {
       position: absolute;
       width: 100%;
       height: 100%;
@@ -71,7 +71,7 @@
       z-index: 1;
     }
 
-    .blueprint-line {
+    .tech-line {
       position: absolute;
       background-color: rgba(0, 200, 255, 0.3);
       transform-origin: left center;
@@ -79,13 +79,14 @@
       box-shadow: 0 0 10px rgba(0, 200, 255, 0.5);
     }
 
-    .glow-line {
+    .circuit-node {
       position: absolute;
-      height: 2px;
+      width: 8px;
+      height: 8px;
       background: rgba(0, 200, 255, 0.8);
+      border-radius: 50%;
       box-shadow: 0 0 10px 2px rgba(0, 200, 255, 0.8);
       animation: glowPulse 2s infinite alternate;
-      transform-origin: left center;
     }
 
     .light-runner {
@@ -97,7 +98,7 @@
       transform-origin: left center;
     }
 
-    .blueprint-grid {
+    .tech-grid {
       position: absolute;
       width: 100%;
       height: 100%;
@@ -106,6 +107,13 @@
         linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px);
       background-size: 40px 40px;
       z-index: 0;
+    }
+
+    .tech-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid rgba(0, 200, 255, 0.3);
+      animation: circlePulse 4s infinite alternate;
     }
 
     @keyframes logoFadeIn {
@@ -134,8 +142,8 @@
     }
 
     @keyframes glowPulse {
-      0% { opacity: 0.3; }
-      100% { opacity: 1; }
+      0% { opacity: 0.3; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1.1); }
     }
 
     @keyframes lightRun {
@@ -148,6 +156,11 @@
       50% { opacity: 1; box-shadow: 0 0 15px rgba(0, 200, 255, 0.9); }
     }
 
+    @keyframes circlePulse {
+      0% { transform: scale(0.8); opacity: 0.3; }
+      100% { transform: scale(1.2); opacity: 0.7; }
+    }
+
     .main-content {
       opacity: 0;
       animation: contentFadeIn 0.5s ease-out 6.5s forwards;
@@ -158,7 +171,6 @@
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* Rest of your existing styles remain the same */
     header {
       background-color: white;
       padding: 20px 8px;
@@ -204,11 +216,30 @@
       box-shadow: 0 5px 15px rgba(0, 73, 135, 0.1);
       transition: all 0.3s ease;
       border: 1px solid rgba(0, 73, 135, 0.1);
+      position: relative;
+      overflow: hidden;
     }
 
     .system-card:hover {
       transform: translateY(-5px);
       box-shadow: 0 8px 20px rgba(0, 73, 135, 0.15);
+    }
+
+    .system-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, #004987, #0088ff);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    .system-card:hover::before {
+      transform: scaleX(1);
     }
 
     .system-title {
@@ -282,6 +313,10 @@
       background: linear-gradient(135deg, #004987, #0055aa);
     }
 
+    .btn-code {
+      background: linear-gradient(135deg, #004987, #0099cc);
+    }
+
     footer {
       margin-top: 30px;
       font-size: 12px;
@@ -308,6 +343,12 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .sound-control:hover {
+      transform: scale(1.1);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
     }
 
     .btn-cloud {
@@ -381,8 +422,8 @@
 </head>
 <body>
   <div class="intro-animation">
-    <div class="blueprint-grid"></div>
-    <div class="construction-animation" id="constructionAnimation"></div>
+    <div class="tech-grid"></div>
+    <div class="engineering-animation" id="engineeringAnimation"></div>
     <div class="intro-logo">IBA</div>
     <div class="intro-subtitle">Trading & Contracting & Transportation</div>
   </div>
@@ -406,6 +447,11 @@
         <div class="system-title">Vehicle Reports</div>
         <a href="https://dc-database.github.io/002/index.html" class="btn btn-vehicle" target="_blank">Open Records</a>
       </div>
+
+      <div class="system-card">
+        <div class="system-title">Code Generator</div>
+        <a href="https://dc-database.github.io/004/" class="btn btn-code" target="_blank">Letter Code Generator</a>
+      </div>
     </div>
 
     <footer>
@@ -422,162 +468,145 @@
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     let currentSound = null;
 
-    // Construction-themed sounds
+    // Engineering-themed sounds
     const soundSources = {
       intro: [
-        'https://assets.mixkit.co/sfx/preview/mixkit-construction-site-machine-starting-1660.mp3',
-        'https://assets.mixkit.co/sfx/preview/mixkit-construction-ambience-1244.mp3'
+        'https://assets.mixkit.co/sfx/preview/mixkit-sci-fi-ambience-2223.mp3',
+        'https://assets.mixkit.co/sfx/preview/mixkit-tech-ambience-2175.mp3'
       ],
       click: [
-        'https://assets.mixkit.co/sfx/preview/mixkit-mechanical-metal-clang-1717.mp3',
-        'https://assets.mixkit.co/sfx/preview/mixkit-metal-gear-failure-1716.mp3'
+        'https://assets.mixkit.co/sfx/preview/mixkit-electronic-circuit-2585.mp3',
+        'https://assets.mixkit.co/sfx/preview/mixkit-quick-jump-arcade-game-239.mp3'
       ],
       vehicle: [
         'https://assets.mixkit.co/sfx/preview/mixkit-truck-engine-revving-1698.mp3',
         'https://assets.mixkit.co/sfx/preview/mixkit-excavator-engine-1699.mp3'
       ],
       tool: [
-        'https://assets.mixkit.co/sfx/preview/mixkit-hammering-a-nail-1701.mp3',
-        'https://assets.mixkit.co/sfx/preview/mixkit-drilling-metal-1700.mp3'
+        'https://assets.mixkit.co/sfx/preview/mixkit-robot-positronic-busy-2287.mp3',
+        'https://assets.mixkit.co/sfx/preview/mixkit-computer-science-alert-2521.mp3'
       ]
     };
 
-    // Create modern building animation with glowing edges
-    function createConstructionAnimation() {
-      const container = document.getElementById('constructionAnimation');
+    // Create modern engineering animation with circuit board theme
+    function createEngineeringAnimation() {
+      const container = document.getElementById('engineeringAnimation');
       const width = container.offsetWidth;
       const height = container.offsetHeight;
       
-      // Add blueprint grid background
+      // Add tech grid background
       const grid = document.createElement('div');
-      grid.className = 'blueprint-grid';
+      grid.className = 'tech-grid';
       container.appendChild(grid);
       
-      // Modern building with geometric shape inspired by the reference image
-      const buildingParts = [
-        // Base structure
-        { x1: width * 0.35, y1: height * 0.7, x2: width * 0.65, y2: height * 0.7, thickness: 3, delay: 0 }, // Base
-        { x1: width * 0.35, y1: height * 0.7, x2: width * 0.35, y2: height * 0.4, thickness: 3, delay: 0.2 }, // Left wall
-        { x1: width * 0.65, y1: height * 0.7, x2: width * 0.65, y2: height * 0.4, thickness: 3, delay: 0.4 }, // Right wall
+      // Create circuit board pattern
+      const circuitLines = [
+        // Main horizontal lines
+        { x1: width * 0.2, y1: height * 0.3, x2: width * 0.8, y2: height * 0.3, thickness: 2, delay: 0 },
+        { x1: width * 0.2, y1: height * 0.5, x2: width * 0.8, y2: height * 0.5, thickness: 2, delay: 0.2 },
+        { x1: width * 0.2, y1: height * 0.7, x2: width * 0.8, y2: height * 0.7, thickness: 2, delay: 0.4 },
         
-        // Angled roof sections
-        { x1: width * 0.35, y1: height * 0.4, x2: width * 0.45, y2: height * 0.3, thickness: 3, delay: 0.6 }, // Left roof
-        { x1: width * 0.65, y1: height * 0.4, x2: width * 0.55, y2: height * 0.3, thickness: 3, delay: 0.8 }, // Right roof
-        { x1: width * 0.45, y1: height * 0.3, x2: width * 0.55, y2: height * 0.3, thickness: 3, delay: 1.0 }, // Roof peak
+        // Vertical connectors
+        { x1: width * 0.3, y1: height * 0.3, x2: width * 0.3, y2: height * 0.7, thickness: 2, delay: 0.6 },
+        { x1: width * 0.5, y1: height * 0.3, x2: width * 0.5, y2: height * 0.7, thickness: 2, delay: 0.8 },
+        { x1: width * 0.7, y1: height * 0.3, x2: width * 0.7, y2: height * 0.7, thickness: 2, delay: 1.0 },
         
-        // Vertical divisions
-        { x1: width * 0.4, y1: height * 0.7, x2: width * 0.4, y2: height * 0.4, thickness: 2, delay: 1.2 }, // Left division
-        { x1: width * 0.5, y1: height * 0.7, x2: width * 0.5, y2: height * 0.4, thickness: 2, delay: 1.4 }, // Center division
-        { x1: width * 0.6, y1: height * 0.7, x2: width * 0.6, y2: height * 0.4, thickness: 2, delay: 1.6 }, // Right division
+        // Diagonal connectors
+        { x1: width * 0.3, y1: height * 0.3, x2: width * 0.5, y2: height * 0.5, thickness: 2, delay: 1.2 },
+        { x1: width * 0.5, y1: height * 0.5, x2: width * 0.7, y2: height * 0.3, thickness: 2, delay: 1.4 },
+        { x1: width * 0.3, y1: height * 0.7, x2: width * 0.5, y2: height * 0.5, thickness: 2, delay: 1.6 },
+        { x1: width * 0.5, y1: height * 0.5, x2: width * 0.7, y2: height * 0.7, thickness: 2, delay: 1.8 },
         
-        // Horizontal divisions
-        { x1: width * 0.35, y1: height * 0.6, x2: width * 0.65, y2: height * 0.6, thickness: 2, delay: 1.8 }, // Middle floor
-        { x1: width * 0.35, y1: height * 0.5, x2: width * 0.65, y2: height * 0.5, thickness: 2, delay: 2.0 }, // Upper floor
-        
-        // Entrance
-        { x1: width * 0.45, y1: height * 0.7, x2: width * 0.45, y2: height * 0.65, thickness: 2, delay: 2.2 }, // Left pillar
-        { x1: width * 0.55, y1: height * 0.7, x2: width * 0.55, y2: height * 0.65, thickness: 2, delay: 2.4 }, // Right pillar
-        { x1: width * 0.45, y1: height * 0.65, x2: width * 0.55, y2: height * 0.65, thickness: 2, delay: 2.6 }, // Entrance top
+        // Outer connections
+        { x1: width * 0.2, y1: height * 0.4, x2: width * 0.1, y2: height * 0.4, thickness: 1.5, delay: 2.0 },
+        { x1: width * 0.8, y1: height * 0.6, x2: width * 0.9, y2: height * 0.6, thickness: 1.5, delay: 2.2 },
       ];
       
-      // Draw the building
-      buildingParts.forEach(part => {
+      // Draw the circuit lines
+      circuitLines.forEach(line => {
         setTimeout(() => {
-          const line = document.createElement('div');
-          line.classList.add('blueprint-line');
+          const techLine = document.createElement('div');
+          techLine.classList.add('tech-line');
           
-          const length = Math.sqrt(Math.pow(part.x2 - part.x1, 2) + Math.pow(part.y2 - part.y1, 2));
-          const angle = Math.atan2(part.y2 - part.y1, part.x2 - part.x1) * 180 / Math.PI;
+          const length = Math.sqrt(Math.pow(line.x2 - line.x1, 2) + Math.pow(line.y2 - line.y1, 2));
+          const angle = Math.atan2(line.y2 - line.y1, line.x2 - line.x1) * 180 / Math.PI;
           
-          line.style.width = `${length}px`;
-          line.style.height = `${part.thickness}px`;
-          line.style.left = `${part.x1}px`;
-          line.style.top = `${part.y1}px`;
-          line.style.transform = `rotate(${angle}deg)`;
+          techLine.style.width = `${length}px`;
+          techLine.style.height = `${line.thickness}px`;
+          techLine.style.left = `${line.x1}px`;
+          techLine.style.top = `${line.y1}px`;
+          techLine.style.transform = `rotate(${angle}deg)`;
           
-          container.appendChild(line);
+          container.appendChild(techLine);
           
           // Add glowing light that runs along the line
-          if (part.thickness >= 2) {
+          if (line.thickness >= 2) {
             const glow = document.createElement('div');
             glow.classList.add('light-runner');
             
             glow.style.width = `${length}px`;
-            glow.style.left = `${part.x1}px`;
-            glow.style.top = `${part.y1}px`;
+            glow.style.left = `${line.x1}px`;
+            glow.style.top = `${line.y1}px`;
             glow.style.transform = `rotate(${angle}deg)`;
             glow.style.animationDelay = `${Math.random() * 2}s`;
             
             container.appendChild(glow);
             playSound('tool');
           }
-        }, part.delay * 1000);
+        }, line.delay * 1000);
       });
       
-      // Add windows with pulsing glow
-      const windows = [
-        // Left section windows
-        { x: width * 0.375, y: height * 0.65, width: width * 0.025, height: height * 0.05, delay: 2.8 },
-        { x: width * 0.375, y: height * 0.55, width: width * 0.025, height: height * 0.05, delay: 3.0 },
-        { x: width * 0.425, y: height * 0.65, width: width * 0.025, height: height * 0.05, delay: 3.2 },
-        { x: width * 0.425, y: height * 0.55, width: width * 0.025, height: height * 0.05, delay: 3.4 },
-        
-        // Center section windows
-        { x: width * 0.475, y: height * 0.65, width: width * 0.025, height: height * 0.05, delay: 3.6 },
-        { x: width * 0.475, y: height * 0.55, width: width * 0.025, height: height * 0.05, delay: 3.8 },
-        { x: width * 0.525, y: height * 0.65, width: width * 0.025, height: height * 0.05, delay: 4.0 },
-        { x: width * 0.525, y: height * 0.55, width: width * 0.025, height: height * 0.05, delay: 4.2 },
-        
-        // Right section windows
-        { x: width * 0.575, y: height * 0.65, width: width * 0.025, height: height * 0.05, delay: 4.4 },
-        { x: width * 0.575, y: height * 0.55, width: width * 0.025, height: height * 0.05, delay: 4.6 },
-        { x: width * 0.625, y: height * 0.65, width: width * 0.025, height: height * 0.05, delay: 4.8 },
-        { x: width * 0.625, y: height * 0.55, width: width * 0.025, height: height * 0.05, delay: 5.0 },
+      // Add circuit nodes at connection points
+      const nodes = [
+        { x: width * 0.2, y: height * 0.3, delay: 2.4 },
+        { x: width * 0.8, y: height * 0.3, delay: 2.6 },
+        { x: width * 0.2, y: height * 0.5, delay: 2.8 },
+        { x: width * 0.8, y: height * 0.5, delay: 3.0 },
+        { x: width * 0.2, y: height * 0.7, delay: 3.2 },
+        { x: width * 0.8, y: height * 0.7, delay: 3.4 },
+        { x: width * 0.3, y: height * 0.3, delay: 3.6 },
+        { x: width * 0.5, y: height * 0.3, delay: 3.8 },
+        { x: width * 0.7, y: height * 0.3, delay: 4.0 },
+        { x: width * 0.3, y: height * 0.5, delay: 4.2 },
+        { x: width * 0.5, y: height * 0.5, delay: 4.4 },
+        { x: width * 0.7, y: height * 0.5, delay: 4.6 },
+        { x: width * 0.3, y: height * 0.7, delay: 4.8 },
+        { x: width * 0.5, y: height * 0.7, delay: 5.0 },
+        { x: width * 0.7, y: height * 0.7, delay: 5.2 },
       ];
       
-      windows.forEach((win, index) => {
-        setTimeout(() => {
-          const window = document.createElement('div');
-          window.style.position = 'absolute';
-          window.style.width = `${win.width}px`;
-          window.style.height = `${win.height}px`;
-          window.style.left = `${win.x}px`;
-          window.style.top = `${win.y}px`;
-          window.style.backgroundColor = 'rgba(0, 200, 255, 0.3)';
-          window.style.borderRadius = '2px';
-          window.style.animation = 'windowGlow 3s infinite alternate';
-          window.style.animationDelay = `${index * 0.1}s`;
-          
-          container.appendChild(window);
-        }, win.delay * 1000);
-      });
-      
-      // Add pulsing dots at building corners
-      const corners = [
-        { x: width * 0.35, y: height * 0.7 },
-        { x: width * 0.65, y: height * 0.7 },
-        { x: width * 0.35, y: height * 0.4 },
-        { x: width * 0.65, y: height * 0.4 },
-        { x: width * 0.45, y: height * 0.3 },
-        { x: width * 0.55, y: height * 0.3 }
-      ];
-      
-      corners.forEach((corner, index) => {
+      nodes.forEach((node, index) => {
         setTimeout(() => {
           const dot = document.createElement('div');
-          dot.style.position = 'absolute';
-          dot.style.width = '10px';
-          dot.style.height = '10px';
-          dot.style.left = `${corner.x - 5}px`;
-          dot.style.top = `${corner.y - 5}px`;
-          dot.style.borderRadius = '50%';
-          dot.style.backgroundColor = 'rgba(0, 200, 255, 0.8)';
-          dot.style.boxShadow = '0 0 10px 3px rgba(0, 200, 255, 0.8)';
-          dot.style.animation = 'glowPulse 1.5s infinite alternate';
-          dot.style.animationDelay = `${index * 0.3}s`;
+          dot.classList.add('circuit-node');
+          dot.style.left = `${node.x - 4}px`;
+          dot.style.top = `${node.y - 4}px`;
+          dot.style.animationDelay = `${index * 0.1}s`;
           
           container.appendChild(dot);
-        }, 5200 + index * 200);
+        }, node.delay * 1000);
+      });
+      
+      // Add pulsing tech circles
+      const circles = [
+        { x: width * 0.2, y: height * 0.4, size: 60, delay: 5.4 },
+        { x: width * 0.8, y: height * 0.6, size: 60, delay: 5.6 },
+        { x: width * 0.5, y: height * 0.2, size: 80, delay: 5.8 },
+        { x: width * 0.5, y: height * 0.8, size: 80, delay: 6.0 },
+      ];
+      
+      circles.forEach((circle, index) => {
+        setTimeout(() => {
+          const techCircle = document.createElement('div');
+          techCircle.classList.add('tech-circle');
+          techCircle.style.width = `${circle.size}px`;
+          techCircle.style.height = `${circle.size}px`;
+          techCircle.style.left = `${circle.x - circle.size/2}px`;
+          techCircle.style.top = `${circle.y - circle.size/2}px`;
+          techCircle.style.animationDelay = `${index * 0.2}s`;
+          
+          container.appendChild(techCircle);
+        }, circle.delay * 1000);
       });
     }
 
@@ -659,7 +688,7 @@
 
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
-      createConstructionAnimation();
+      createEngineeringAnimation();
       setupLocalInvoiceButton();
       
       // Sound preference
