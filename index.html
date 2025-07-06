@@ -415,6 +415,49 @@
     filter: blur(60px);
   }
 
+  /* ===== NEW TOOLTIP STYLES ===== */
+  .tooltip-container {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip-text {
+    visibility: hidden;
+    width: 180px;
+    background-color: #002b45;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 12px;
+    position: absolute;
+    z-index: 10;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    font-size: 0.8rem;
+    box-shadow: 0 4px 15px rgba(0, 43, 69, 0.2);
+    pointer-events: none;
+  }
+
+  .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #002b45 transparent transparent transparent;
+  }
+
+  .tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
   @media (max-width: 768px) {
     .logo-animation {
       width: 140px;
@@ -471,6 +514,13 @@
 
     .btn.cloud { display: inline-flex; }
     .btn.network { display: none; }
+
+    /* Mobile tooltip adjustments */
+    .tooltip-text {
+      width: 160px;
+      font-size: 0.75rem;
+      bottom: calc(100% + 8px);
+    }
   }
 
   @media (max-width: 480px) {
@@ -526,10 +576,12 @@
     <div class="card">
       <h2><i class="fas fa-file-invoice"></i> Invoice Management</h2>
       <div class="btn-container">
-        <a class="btn network" href="file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html" 
-   onclick="event.preventDefault(); window.open(this.href, '_blank');">
-  <i class="fas fa-network-wired"></i> Network Access
-</a>
+        <div class="tooltip-container">
+          <a class="btn network" href="file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html" target="_blank">
+            <i class="fas fa-network-wired"></i> Network Access
+          </a>
+          <span class="tooltip-text">Right-click → "Open in new tab"</span>
+        </div>
         <a class="btn cloud" href="https://dc-database.github.io/001/">
           <i class="fas fa-cloud"></i> Cloud Access
         </a>
@@ -556,12 +608,44 @@
 </div>
 
 <script>
+// Handle intro animation cleanup
 setTimeout(() => {
   const intro = document.querySelector('.intro');
   if (intro && getComputedStyle(intro).opacity !== '0') {
     intro.style.display = 'none';
   }
 }, 3000);
+
+// Mobile touch support for tooltip
+document.addEventListener('DOMContentLoaded', function() {
+  const networkBtn = document.querySelector('.btn.network');
+  
+  if (networkBtn) {
+    let touchTimer;
+    const tooltip = networkBtn.parentElement.querySelector('.tooltip-text');
+    
+    networkBtn.addEventListener('touchstart', function() {
+      touchTimer = setTimeout(function() {
+        tooltip.style.visibility = 'visible';
+        tooltip.style.opacity = '1';
+        tooltip.style.transform = 'translateX(-50%) translateY(0)';
+      }, 500);
+    }, {passive: true});
+    
+    networkBtn.addEventListener('touchend', function() {
+      clearTimeout(touchTimer);
+    });
+    
+    // Hide tooltip when tapping elsewhere
+    document.addEventListener('touchstart', function(e) {
+      if (!networkBtn.contains(e.target)) {
+        tooltip.style.visibility = 'hidden';
+        tooltip.style.opacity = '0';
+        tooltip.style.transform = 'translateX(-50%) translateY(5px)';
+      }
+    }, {passive: true});
+  }
+});
 </script>
 </body>
 </html>
