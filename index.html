@@ -151,20 +151,40 @@
     padding: 0 20px;
   }
 
-  .logo-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
+.logo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
 
+.logo-img {
+  height: 100px;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+  transition: all 0.3s ease;
+  display: none; /* Hide by default */
+}
+
+/* Mobile-specific styles - keep logo hidden */
+@media (max-width: 768px) {
+  .network-btn {
+    display: none !important;
+  }
   .logo-img {
-    height: 100px;
-    margin-bottom: 15px;
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-    transition: all 0.3s ease;
+    display: none !important;
   }
+}
 
+/* Desktop-specific styles - show logo */
+@media (min-width: 769px) {
+  .cloud-btn {
+    display: none !important;
+  }
+  .logo-img {
+    display: block; /* Show logo only on desktop */
+  }
+}
   .portal-title {
     font-size: clamp(1.8rem, 5vw, 2.5rem);
     font-weight: 600;
