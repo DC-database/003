@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>IBA System Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f8fafc;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #0077b6, #0096c7);
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0,119,182,0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,119,182,0.3);
+    }
+    .btn i {
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2><i class="fas fa-network-wired"></i> Network Access</h2>
+  <a class="btn network" 
+     href="file:///L:/HTML%20System/Invoice%20Management%20System/index.html" 
+     id="networkBtn"
+     onclick="openNetworkLink(event)" 
+     oncontextmenu="copyAndOpen(event)">
+    <i class="fas fa-link"></i> Open Network Link
+  </a>
+</div>
+
+<script>
+const fileURL = "file:///L:/HTML%20System/Invoice%20Management%20System/index.html";
+
+// LEFT click: Open in _self tab
+function openNetworkLink(event) {
+  event.preventDefault();
+  window.open(fileURL, "_self");
+}
+
+// RIGHT click: Copy to clipboard and open
+function copyAndOpen(event) {
+  event.preventDefault();
+  navigator.clipboard.writeText(fileURL).then(() => {
+    alert("Link copied:\n" + fileURL);
+    window.open(fileURL, "_self");
+  }).catch(err => {
+    alert("Failed to copy: " + err);
+  });
+}
+</script>
+
+</body>
+</html>
