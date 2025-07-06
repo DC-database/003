@@ -574,20 +574,22 @@
   
   <div class="cards">
     <div class="card">
-      <h2><i class="fas fa-file-invoice"></i> Invoice Management</h2>
-      <div class="btn-container">
-        <div class="tooltip-container">
-          <a class="btn network" href="file:///L:/HTML%20System/Invoice%20Management%20System/Invoice.html" target="_blank">
-            <i class="fas fa-network-wired"></i> Network Access
-          </a>
-          <span class="tooltip-text">Right-click → "Open in new tab"</span>
-        </div>
-        <a class="btn cloud" href="https://dc-database.github.io/001/">
-          <i class="fas fa-cloud"></i> Cloud Access
-        </a>
-      </div>
+  <h2><i class="fas fa-file-invoice"></i> Invoice Management</h2>
+  <div class="btn-container">
+    <div class="tooltip-container">
+      <button class="btn network" id="networkAccessBtn">
+        <i class="fas fa-network-wired"></i> Network Access
+      </button>
+      <span class="tooltip-text">Right-click → "Copy link address"</span>
     </div>
-    <div class="card">
+    <a class="btn cloud" href="https://dc-database.github.io/001/">
+      <i class="fas fa-cloud"></i> Cloud Access
+    </a>
+  </div>
+</div>
+
+
+   <div class="card">
       <h2><i class="fas fa-car-alt"></i> Vehicle Reports</h2>
       <a class="btn" href="https://dc-database.github.io/002/">
         <i class="fas fa-chart-line"></i> Open Records
@@ -608,6 +610,66 @@
 </div>
 
 <script>
+
+
+
+document.getElementById('networkAccessBtn').addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+  const link = 'file:///L:/HTML%20System/Invoice%20Management%20System/index.html';
+  
+  // Copy to clipboard
+  navigator.clipboard.writeText(link).then(() => {
+    const tooltip = this.parentElement.querySelector('.tooltip-text');
+    const originalText = tooltip.textContent;
+    tooltip.textContent = 'Link copied! Opening...';
+    
+    // Open a new tab
+    const newTab = window.open('', '_blank');
+    
+    // Try to paste the link (note: this may not work due to browser security restrictions)
+    try {
+      newTab.location.href = link;
+    } catch (err) {
+      // If direct setting of location fails, show instructions
+      newTab.document.write(`
+        <html>
+          <head><title>Paste Link</title></head>
+          <body style="font-family: Arial, sans-serif; padding: 20px; text-align: center;">
+            <h2>Paste the link in your address bar</h2>
+            <p>Right-click in the address bar and select "Paste"</p>
+            <p>Then press Enter</p>
+            <p><small>Copied link: ${link}</small></p>
+          </body>
+        </html>
+      `);
+    }
+    
+    setTimeout(() => {
+      tooltip.textContent = originalText;
+    }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy: ', err);
+    const tooltip = this.parentElement.querySelector('.tooltip-text');
+    tooltip.textContent = 'Copy failed! Right-click to try again.';
+    setTimeout(() => {
+      tooltip.textContent = 'Right-click → "Copy link address"';
+    }, 2000);
+  });
+});
+
+// Left click shows instructions (unchanged)
+document.getElementById('networkAccessBtn').addEventListener('click', function() {
+  const tooltip = this.parentElement.querySelector('.tooltip-text');
+  tooltip.style.visibility = 'visible';
+  tooltip.style.opacity = '1';
+  tooltip.style.transform = 'translateX(-50%) translateY(0)';
+  
+  setTimeout(() => {
+    tooltip.style.visibility = 'hidden';
+    tooltip.style.opacity = '0';
+    tooltip.style.transform = 'translateX(-50%) translateY(5px)';
+  }, 3000);
+});
 // Handle intro animation cleanup
 setTimeout(() => {
   const intro = document.querySelector('.intro');
@@ -615,6 +677,8 @@ setTimeout(() => {
     intro.style.display = 'none';
   }
 }, 3000);
+
+
 
 // Mobile touch support for tooltip
 document.addEventListener('DOMContentLoaded', function() {
