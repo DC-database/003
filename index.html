@@ -369,7 +369,7 @@
            oncontextmenu="copyAndOpen(event)">
           <i class="fas fa-network-wired"></i> Network Access
         </a>
-        <a class="btn cloud-btn" href="https://dc-database.github.io/001/">
+        <a class="btn cloud-btn" href="https://dc-database.github.io/001/" target="_self">
           <i class="fas fa-cloud"></i> Cloud Access
         </a>
       </div>
@@ -377,14 +377,14 @@
 
     <div class="card">
       <h2><i class="fas fa-car-alt"></i> Vehicle Reports</h2>
-      <a class="btn" href="https://dc-database.github.io/002/">
+      <a class="btn" href="https://dc-database.github.io/002/" target="_self">
         <i class="fas fa-chart-line"></i> Open Records
       </a>
     </div>
 
     <div class="card">
       <h2><i class="fas fa-code"></i> Code Generator</h2>
-      <a class="btn" href="https://dc-database.github.io/004/">
+      <a class="btn" href="https://dc-database.github.io/004/" target="_self">
         <i class="fas fa-keyboard"></i> Letter Code Generator
       </a>
     </div>
@@ -446,6 +446,13 @@ document.addEventListener('DOMContentLoaded', function() {
       btn.style.display = 'inline-flex';
     });
   }
+  
+  // Set all buttons to open in same tab
+  document.querySelectorAll('a.btn').forEach(btn => {
+    if (!btn.hasAttribute('target')) {
+      btn.setAttribute('target', '_self');
+    }
+  });
 });
 </script>
 </body>
