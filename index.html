@@ -308,6 +308,16 @@
     margin-right: 8px;
   }
 
+  .download-container {
+    margin-top: 40px;
+    margin-bottom: -40px;
+    text-align: center;
+  }
+
+  .download-btn {
+    background: linear-gradient(135deg, #6c757d, #495057);
+  }
+
   footer {
     margin-top: 80px;
     font-size: 0.9rem;
@@ -359,28 +369,24 @@
   </header>
 
   <div class="cards">
-<div class="card">
-  <h2><i class="fas fa-file-invoice"></i> Invoice Management</h2>
-  <div class="btn-container">
-    <a class="btn network-btn" 
-       href="http://192.168.1.5/HTML%20System/Invoice%20Management%20System/index.html" 
-       id="networkBtn"
-       onclick="openNetworkLink(event)" 
-       oncontextmenu="copyAndOpen(event)">
-      <i class="fas fa-network-wired"></i> Network Access
-    </a>
-    <a class="btn cloud-btn" href="https://dc-database.github.io/001/" target="_self">
-      <i class="fas fa-cloud"></i> Cloud Access
-    </a>
-    <a class="btn fallback-btn" href="file:///L:/HTML%20System/Invoice%20Management%20System/index.html" style="display:none; background:#6c757d;">
-      <i class="fas fa-desktop"></i> Local Access
-    </a>
-    <a class="btn" href="https://ibaqatar-my.sharepoint.com/:u:/g/personal/dc_iba_com_qa/ESM6W5ER-SJHkP_dksZajaMBEa6J32qSeChNFiyozgLrJQ?e=AYwpHV" target="_blank">
-      <i class="fas fa-download"></i> Download Portal File
-    </a>
-
-  </div>
-</div>
+    <div class="card">
+      <h2><i class="fas fa-file-invoice"></i> Invoice Management</h2>
+      <div class="btn-container">
+        <a class="btn network-btn" 
+           href="http://192.168.1.5/HTML%20System/Invoice%20Management%20System/index.html" 
+           id="networkBtn"
+           onclick="openNetworkLink(event)" 
+           oncontextmenu="copyAndOpen(event)">
+          <i class="fas fa-network-wired"></i> Network Access
+        </a>
+        <a class="btn cloud-btn" href="https://dc-database.github.io/001/" target="_self">
+          <i class="fas fa-cloud"></i> Cloud Access
+        </a>
+        <a class="btn fallback-btn" href="file:///L:/HTML%20System/Invoice%20Management%20System/index.html" style="display:none; background:#6c757d;">
+          <i class="fas fa-desktop"></i> Local Access
+        </a>
+      </div>
+    </div>
 
     <div class="card">
       <h2><i class="fas fa-car-alt"></i> Vehicle Reports</h2>
@@ -395,6 +401,12 @@
         <i class="fas fa-keyboard"></i> Letter Code Generator
       </a>
     </div>
+  </div>
+
+  <div class="download-container">
+    <a class="btn download-btn" href="https://ibaqatar-my.sharepoint.com/:u:/g/personal/dc_iba_com_qa/ESM6W5ER-SJHkP_dksZajaMBEa6J32qSeChNFiyozgLrJQ?e=AYwpHV" target="_blank">
+      <i class="fas fa-download"></i> Download Portal File
+    </a>
   </div>
 
   <footer>
@@ -428,9 +440,6 @@ async function testConnection(url) {
     return { success: false };
   }
 }
-
-
-
 
 // Hide intro after 3 seconds
 setTimeout(() => {
